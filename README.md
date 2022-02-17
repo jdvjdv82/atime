@@ -31,26 +31,20 @@ type Foo struct {
 
 ## Benchmark:
 
-- Go 1.7.6
+- Go 1.7.7
 - Windows 11 64bit
 - AMD Ryzen Threadripper 3960X 24-Core Processor
 
 ```
 #read
-BenchmarkMutexTimeRead
-BenchmarkMutexTimeRead-48               653150656                9.197 ns/op           0 B/op          0 allocs/op
-BenchmarkATimeReadTime
-BenchmarkATimeReadTime-48               1000000000               0.5350 ns/op          0 B/op          0 allocs/op
-BenchmarkATimeReadUnix
-BenchmarkATimeReadUnix-48               1000000000               0.4470 ns/op          0 B/op          0 allocs/op
+BenchmarkMutexTimeRead-48               661886667                8.722 ns/op           0 B/op          0 allocs/op
+BenchmarkATimeReadTime-48               1000000000               0.5250 ns/op          0 B/op          0 allocs/op
+BenchmarkATimeReadUnix-48               1000000000               0.3965 ns/op          0 B/op          0 allocs/op
 
 #write
-BenchmarkMutexTimePointerWrite
-BenchmarkMutexTimePointerWrite-48       134374093               44.44 ns/op           24 B/op          1 allocs/op
-BenchmarkMutexTimeWrite
-BenchmarkMutexTimeWrite-48              293398590               19.52 ns/op            0 B/op          0 allocs/op
-BenchmarkATimeWrite
-BenchmarkATimeWrite-48                  776197038                7.181 ns/op           0 B/op          0 allocs/op
+BenchmarkMutexTimePointerWrite-48       134787126               44.44 ns/op           24 B/op          1 allocs/op
+BenchmarkMutexTimeWrite-48              314054092               18.76 ns/op            0 B/op          0 allocs/op
+BenchmarkATimeWrite-48                  867054152                6.804 ns/op           0 B/op          0 allocs/op
   
 ```
 

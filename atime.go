@@ -7,7 +7,20 @@ import (
 	"github.com/segmentio/encoding/json"
 )
 
-type AtomicTime int64
+type AtomicTime struct {
+	_ noCopy
+	v int64
+}
+
+// noCopy may be embedded into structs which must not be copied
+// after the first use.
+//
+// See https://github.com/golang/go/issues/8005#issuecomment-190753527
+// for details.
+type noCopy struct{}
+
+// Lock is a no-op used by -copylocks checker from `go vet`.
+func (*noCopy) Lock() {}
 
 func New() *AtomicTime {
 	return new(AtomicTime)
@@ -26,27 +39,27 @@ func NewTime(t time.Time) *AtomicTime {
 }
 
 func (at *AtomicTime) SetNow() {
-	atomic.StoreInt64((*int64)(at), time.Now().UTC().Unix())
+	atomic.StoreInt64(&at.v, time.Now().UTC().Unix())
 }
 
 func (at *AtomicTime) SetNil() {
-	atomic.StoreInt64((*int64)(at), 0)
+	atomic.StoreInt64(&at.v, 0)
 }
 
 func (at *AtomicTime) SetToTime(t time.Time) {
-	atomic.StoreInt64((*int64)(at), t.Unix())
+	atomic.StoreInt64(&at.v, t.Unix())
 }
 
 func (at *AtomicTime) GetUnixTime() int64 {
-	return atomic.LoadInt64((*int64)(at))
+	return atomic.LoadInt64(&at.v)
 }
 
 func (at *AtomicTime) GetTime() time.Time {
-	return time.Unix(atomic.LoadInt64((*int64)(at)), 0)
+	return time.Unix(atomic.LoadInt64(&at.v), 0)
 }
 
 func (at *AtomicTime) GetTimePointer() *time.Time {
-	t := atomic.LoadInt64((*int64)(at))
+	t := atomic.LoadInt64(&at.v)
 	if t == 0 {
 		return nil
 	}
@@ -56,7 +69,7 @@ func (at *AtomicTime) GetTimePointer() *time.Time {
 }
 
 func (at *AtomicTime) SinceNow() time.Duration {
-	return time.Since(time.Unix(atomic.LoadInt64((*int64)(at)), 0))
+	return time.Since(time.Unix(atomic.LoadInt64(&at.v), 0))
 }
 
 // MarshalJSON behaves the same as if the AtomicTime is a *time.Time.
